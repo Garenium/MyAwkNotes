@@ -1,0 +1,2 @@
+#!/bin/bash
+awk -f prog.awk $1
