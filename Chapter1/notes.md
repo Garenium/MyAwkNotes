@@ -9,7 +9,7 @@ Awk command's general syntax:
 
     awk 'program' *input files*
 
-
+In this chapter, we are using the emp.data [file](emp.data).
 
 ## <mark>1. Fields
 $0 is the same as same as the whole line. $1 refers to the first field/column, $2 refers to the second field etc.
@@ -57,84 +57,72 @@ You can format the output with printf() just like C.
 ## <mark>7. Sorting
 Can be done with the UNIX sort command.
 See ``man sort`` to see its flags.
-```awk
+```sh
 awk `{ printf("%6.2f %s\n", $2 * $3, $0)} emp.data | sort
 ```
 
 ## <mark>8. Selection
-You can further patternize through different types of selections:
-
-### 8.1 By Comparison (prints all lines where 2nd field's value is more or equal to 5):
+### 8.1 By Comparison:
 ```awk
+    #prints all lines where 2nd field's value is more or equal to 5
     $2 >= 5
 ```
-
-### 8.2 By Computation (prints all lines where an employer's pay is larger than 50):
+**8.2 By Computation:**
 ```awk
+    #prints all lines where an employer's pay is larger than 50
     $2 * $3 > 50 { printf("$%.2f for %s\n", $2 * $3, $1) }
 ```
-
-### 8.3 By Text Content (Can be done with equality operators or Regex)
-#### Prints every line where 1st field has Susie.
+**8.3 By Text Content (Can be done with equality operators or Regex)**
 ```awk
-    $1 == "Susie"
+    $1 == "Susie"  #Prints every line where 1st field has Susie.
 ```
-#### Looks for Susie everywhere in the file and prints the line if found.
+###
 ```awk
-    /Susie/
+    /Susie/ #Looks for Susie everywhere in the file and prints the line if found.
 ```
-### 8.4 Logical Operators
+**8.4 Logical Operators**
 Can be done with ``&&``, ``||`` and ``!(*pattern*)`` (just like other C-based languages)
-
+###
 This
 ```awk
-    $2 >= 4 || $3 >= 20
+    $2 >= 4 || $3 >= 20 #Checks each 
 ```
 Can be done in an opposite way:
 ```awk
     !($2 >= 4 || $3 >= 20)
 ```
-
-#### This may print twice for each line
+###
 ```awk
-$2 >= 4
-$3 >= 20
+    #This may print twice for each line
+    $2 >= 4
+    $3 >= 20
 ```
-
-### 8.5 Data validation
+**8.5 Data validation**
 Can be done applied with anything from above but with
-a string concatenated
-
+a string concatenated.
 Something like:
 ```awk
-NF != 3 { print $0, "number of fields is not equal to 3" }
+    NF != 3 { print $0, "number of fields is not equal to 3" }
 ```
 to check if each line has 3 fields otherwise it will print the string.
-
+###
 Or
 ```awk
-$2  < 3.35 { print $0, "rate is below minimum wage" } 
+    $2  < 3.35 { print $0, "rate is below minimum wage" } 
 ```
-
-### 8.6 BEGIN and END
-
-If you want labels, you can use BEGIN and END special patterns.
-
-``print ""`` prints a blank line.
-
+**8.6 BEGIN and END**
+If you want labels, you can use BEGIN and END special patterns. ``print ""`` prints a blank line.
 ```awk
-BEGIN { print "NAME     RATE    HOURS"; print "" } /*Prints the beginning labels*/
-
-{ print }  /*Prints all lines in the file*/
-
-END { print "END LABELS"  } /*Prints the ending labels*/
+    BEGIN { print "NAME     RATE    HOURS"; print "" } #Prints the beginning labels
+    { print }                                          #Prints all lines in the file
+    END { print "END LABELS"  }                        #Prints the ending labels
 ```
 
 ## <mark>9. Computing with AWK
-
+###
 ### 9.1 Counting
 If you want to count occuranes based on a pattern, you can have a variable to increment and print. Note that variables in awk are not declared.
-
+###
 ```awk
     $3 > 15 { emp = emp + 1 }
     END { print emp, "employees worked more than 15 hours" }

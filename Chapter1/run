@@ -1,2 +1,22 @@
 #!/bin/bash
-awk -f prog.awk $1
+
+
+# awk -f prog.awk ./emp.data 
+
+echo "This shell script looks for all awk code blocks in the specified markdown file."
+echo "It then writes it to prog.awk"
+
+chpNo=$(awk '/^## / {print NR, $0}' ./notes.md | wc -l)
+echo "Your chapter:"" $chpNo"
+
+read -p 'Type your note chapter {1-'${chpNo}'}: ' myChp
+
+if [[ "$chp" -lt "$chpNo" && "$myChp" =~ ^[0-"$chpNo"]+$ ]]
+    then
+         echo Note chapter: "$myChp"
+
+         code=$(awk -v RS= '/'${myChp}'[.] /' ./notes.md | awk -f extract.awk)
+         echo "${code}" > ./prog.awk
+fi
+
+# awk -v RS= '/8[.] /' ./notes.md | awk -f extract.awk
